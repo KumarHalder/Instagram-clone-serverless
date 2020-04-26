@@ -7,33 +7,35 @@ class Post extends Component {
     constructor(props) {
         super(props);
         this.state = { seen: false};
+        this.userId = '';
+        this.postId='';
+
       }
     shoot(a) {
         alert(a);
     }
-    
-    // togglePop() {
-    //     this.setState({
-    //         seen: !this.state.seen
-    //     });
-    //     console.log(this.state)
-    // };
+
     handleClick() {
         const data = {
             caption : this.props.caption,
-            image : this.props.image
+            image : this.props.image,
+            postId:this.postId,
+            userId:this.userId
         }
         this.props.toggle(data);
         
-        //console.log(data)
+        console.log(data)
        };
 
     render() {
-        const nickname = this.props.nickname;
+        const userId = this.props.userId;
+        const postId = this.props.postId;
         const avatar = this.props.avatar;
         const image = this.props.image;
         //console.log(image==="")
         const caption = this.props.caption;
+        this.userId = userId;
+        this.postId = postId;
 
         return (
             <article className="Post" ref="Post">
@@ -43,7 +45,7 @@ class Post extends Component {
                             <img src={avatar} alt="Chris" />
                         </div>
                         <div className="Post-user-nickname">
-                            <span>{nickname}</span>
+                            <span>{userId}</span>
                         </div>
                         <button className="optionButton" onClick={() =>this.handleClick()}>...</button>
                     </div>
@@ -56,7 +58,7 @@ class Post extends Component {
                 </div>
             </div>
             <div className="Post-caption">
-                <strong>{nickname}</strong> {caption}
+                <strong>{userId}</strong> {caption}
             </div>
             </article >
         );
