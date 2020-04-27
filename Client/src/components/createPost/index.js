@@ -1,45 +1,135 @@
 // src/components/createPost/index.js
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-
+import { v4 as uuidv4 } from 'uuid'
 import "./createPost.css";
 
 class CreatePost extends Component {
-
+  constructor(props) {
+    super(props);
+    this.selectedImage = null;
+    this.fileUploadClick = this.fileUploadClick.bind(this);
+  }
   handleClick() {
     const data = {
-        caption : '',
-        image : '',
-        postId:'',
-        userId:''
+      caption: '',
+      image: '',
+      postId: '',
+      userId: ''
     }
     this.props.toggle(data);
-    
+
     console.log(data)
-   };
-  createPost = async (postBar, url) => {
+  };
+
+  uploadImage = async (file, postId) => {
+    if (file == null) {
+      return "null"
+    }
     try {
-      let postData = {
-        userId: 'd',
-        postId: 'sd',
-        name: postBar.value,
-        attahmentURL: url
-      }
+      console.log("postId: ",postId);
+      console.log("File: ",file);
       const response = await fetch(
-        'https://y12cb4g5ec.execute-api.us-east-1.amazonaws.com/dev/posts', {
+        `https://y12cb4g5ec.execute-api.us-east-1.amazonaws.com/dev/posts/${postId}/attachment`, {
         method: 'POST',
-        mode: 'cors',
-        body: JSON.stringify(postData)
-      }
-      )
+        mode: 'cors'
+
+      })
       const data = await response.json();
-      console.log("Post created:  ", data)
-      alert("post submitted");
-      postBar.value = "";
-      await this.props.refreshPosts();
+      let uploadUrl = data.uploadUrl
+      console.log("presigned url:   ",uploadUrl);
+    //   const response2 = (file) => {  fetch(
+    //     uploadUrl, {
+    //     method: 'PUT',
+    //     body: file
+    //   }).then(
+    //     response => response.json() // if the response is a JSON object
+    //   ).then(
+    //     success => console.log(success) // Handle the success response object
+    //   ).catch(
+    //     error => console.log(error) // Handle the error response object
+    //   );
+    // }
+    //   const data2 =  () => response2(file);
+    await fetch(
+      uploadUrl, {
+      method: 'PUT',
+      
+      body: file
+
+    })
+    
+      console.log("file uploaded");
+      return data.newItem.imageUrl
     }
     catch{
-      alert("Fetching Posts failed")
+      alert("File Upload Failed with presigned url");
+      return "null"
+    }
+  }
+
+  createPost = async (postBar, postData) => {
+    console.log(this.props.deleteOption);
+    let postId = uuidv4();
+    let userId = postData.userId;
+    
+    let url = await this.uploadImage(this.selectedImage, postId);
+    console.log(url);
+    if (!this.props.deleteOption) {
+      try {
+        let postData = {
+          userId: 'ss',
+          postId: postId,
+          name: postBar.value,
+          url: url
+        }
+        console.log(postData);
+        const response = await fetch(
+          'https://y12cb4g5ec.execute-api.us-east-1.amazonaws.com/dev/posts', {
+          method: 'POST',
+          mode: 'cors',
+          body: JSON.stringify(postData)
+        }
+        )
+        const data = await response.json();
+        console.log("Post created:  ", data)
+        alert("post submitted");
+        postBar.value = "";
+        this.selectedImage=null;
+        await this.props.refreshPosts();
+      }
+      catch{
+        alert("Fetching Posts failed")
+      }
+    }
+    else {
+      try {
+
+        
+        let postData = {
+          userId: userId,
+          name: postBar.value
+
+        }
+        console.log(postData)
+        let postId = postData.postId;
+        const response = await fetch(
+          `https://y12cb4g5ec.execute-api.us-east-1.amazonaws.com/dev/posts/${postId}`, {
+          method: 'PATCH',
+          mode: 'cors',
+          body: JSON.stringify(postData)
+        }
+        )
+        const data = await response.json();
+        console.log("Post Updated:  ", data)
+        alert("post Updated");
+        //postBar.value = "";
+        this.handleClick();
+        await this.props.refreshPosts();
+      }
+      catch (e) {
+        console.log(e)
+      }
     }
 
   }
@@ -48,9 +138,9 @@ class CreatePost extends Component {
     try {
       let postData = {
         userId: userId
-        
+
       }
-      console.log("trying to delete post",userId,postId);
+      console.log("trying to delete post", userId, postId);
       const response = await fetch(
         `https://y12cb4g5ec.execute-api.us-east-1.amazonaws.com/dev/posts/${postId}`, {
         method: 'DELETE',
@@ -65,20 +155,57 @@ class CreatePost extends Component {
       await this.props.refreshPosts();
     }
     catch{
-      alert("Fetching Posts failed")
+      alert("Delete Posts failed")
     }
 
   }
 
+  UpdatePost = async (userId, postId) => {
+    try {
+      let postData = {
+        userId: userId
 
-  
+      }
+      console.log("trying to delete post", userId, postId);
+      const response = await fetch(
+        `https://y12cb4g5ec.execute-api.us-east-1.amazonaws.com/dev/posts/${postId}`, {
+        method: 'DELETE',
+        mode: 'cors',
+        body: JSON.stringify(postData)
+      }
+      )
+      const data = await response.json();
+      console.log("Post Deleted:  ", data);
+      //alert("Post Deleted");
+      this.handleClick();
+      await this.props.refreshPosts();
+    }
+    catch{
+      alert("Delete Posts failed")
+    }
+
+  }
+
+  fileUploadClick() {
+    this.refs.fileUploader.click();
+  }
+  handleChange(selectorFiles) {
+    console.log(selectorFiles);
+    this.selectedImage = selectorFiles[0];
+  }
 
   render() {
-    let caption='',userId='',postId='';
-    if (this.props.data!==undefined){
-     caption = this.props.data.caption;
-     userId = this.props.data.userId;
-     postId = this.props.data.postId;
+    let caption = '', userId = '', postId = '';
+    if (this.props.data !== undefined) {
+      caption = this.props.data.caption;
+      userId = this.props.data.userId;
+      postId = this.props.data.postId;
+    }
+    const postData = {
+      url: '',
+      caption: caption,
+      userId: userId,
+      postId: postId
     }
     console.log("createPost: ", this.props.data)
     const avatar = this.props.avatar;
@@ -101,9 +228,10 @@ class CreatePost extends Component {
             </div>
           </header>
           <div className="ButtonSection">
-            {deleteOption ? null : <button className="ButtonClass">Photo</button>}
-            <button className="ButtonClass" onClick={async () => await this.createPost(ReactDOM.findDOMNode(this.refs.postContent), "")}>Post</button>
-            {deleteOption ? <button className="ButtonClass" onClick={async ()=> await this.deletePost(userId,postId)}>Delete</button> : null}
+            <input type="file" id="file" accept="image/png, image/jpeg" onChange={(e) => this.handleChange(e.target.files)} ref="fileUploader" style={{ display: "none" }} />
+            {deleteOption ? null : <button className="ButtonClass" onClick={this.fileUploadClick}>Photo</button>}
+            <button className="ButtonClass" onClick={async () => await this.createPost(ReactDOM.findDOMNode(this.refs.postContent), postData)}>Post</button>
+            {deleteOption ? <button className="ButtonClass" onClick={async () => await this.deletePost(userId, postId)}>Delete</button> : null}
           </div>
         </div>
 

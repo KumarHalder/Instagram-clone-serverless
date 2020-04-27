@@ -70,19 +70,32 @@ class PostManager extends Component {
     
     return (
       <div>
-       <div>{this.state.seen ? <PopUp toggle={(data) => this.togglePopUp(data)} data={this.data} refreshPosts={async () => await this.getPosts()}/> : null}</div>
-      <CreatePost 
-        avatar="https://homepages.cae.wisc.edu/~ece533/images/girl.png" 
-        refreshPosts={async () => await this.getPosts()}>
-        
-      </CreatePost>
+        <div>{this.state.seen ? 
+          <PopUp
+            toggle={(data) => this.togglePopUp(data)} 
+            
+            data={this.data} 
+            refreshPosts={async () => await this.getPosts()}/> : null}
+        </div>
+        <CreatePost 
+          avatar="https://homepages.cae.wisc.edu/~ece533/images/girl.png" 
+          deleteOption={false} data={this.props.data}
+          refreshPosts={async () => await this.getPosts()}>
+          
+        </CreatePost>
       {
         this.state.posts.length>0 ? this.state.posts.map((item) => {
-        
+          console.log( item.attachmentUrl)
+          let imageUrl = ""
+          if (item.attachmentUrl!=="null")
+            imageUrl = item.attachmentUrl;
+          
+         console.log( imageUrl)
         return (
+          
           <Post userId={item.userId} postId = {item.postId} 
             avatar="https://homepages.cae.wisc.edu/~ece533/images/girl.png" 
-            caption={item.name} image='' toggle={(data) => this.togglePopUp(data)} 
+            caption={item.name} image={imageUrl} toggle={(data) => this.togglePopUp(data)} 
             refreshPosts={async () => await this.getPosts()}>
 
           </Post>

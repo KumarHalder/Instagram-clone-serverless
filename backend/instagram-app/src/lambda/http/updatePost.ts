@@ -54,6 +54,6 @@ await docClient.update(params, function(err, data) {
           headers: {
             'Access-Control-Allow-Origin': '*'
           },
-          body: 'Updated' + JSON.stringify(updatedTodo) 
+          body: JSON.stringify(updatedTodo) 
   }
 }
