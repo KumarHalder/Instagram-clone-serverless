@@ -106,7 +106,7 @@ class CreatePost extends Component {
       try {
 
         
-        let postData = {
+        let postUpdateData = {
           userId: userId,
           name: postBar.value
 
@@ -117,7 +117,7 @@ class CreatePost extends Component {
           `https://y12cb4g5ec.execute-api.us-east-1.amazonaws.com/dev/posts/${postId}`, {
           method: 'PATCH',
           mode: 'cors',
-          body: JSON.stringify(postData)
+          body: JSON.stringify(postUpdateData)
         }
         )
         const data = await response.json();
