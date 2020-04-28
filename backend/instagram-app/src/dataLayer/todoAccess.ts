@@ -17,18 +17,18 @@ export class TodoAccess {
     }
 
 
-    async getAllToDos(): Promise<TodoItem[]> {
+    async getAllToDos(userId:string): Promise<TodoItem[]> {
         console.log(this.todoTable);
         //console.log("userID",getUserId(event))
 
-        const result = await this.docClient.scan({
-            TableName: this.todoTable
+        const result = await this.docClient.query({
+            TableName: this.todoTable,
             //IndexName: 'index-name',
-            // KeyConditionExpression: 'userId = :paritionKey',
-            // ExpressionAttributeValues: {
-            //     ':paritionKey': userID
+            KeyConditionExpression: 'userId = :paritionKey',
+            ExpressionAttributeValues: {
+                ':paritionKey': userId
 
-            // }
+            }
 
         }).promise();
         const items = result.Items;

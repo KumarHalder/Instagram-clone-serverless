@@ -38,19 +38,7 @@ class CreatePost extends Component {
       const data = await response.json();
       let uploadUrl = data.uploadUrl
       console.log("presigned url:   ",uploadUrl);
-    //   const response2 = (file) => {  fetch(
-    //     uploadUrl, {
-    //     method: 'PUT',
-    //     body: file
-    //   }).then(
-    //     response => response.json() // if the response is a JSON object
-    //   ).then(
-    //     success => console.log(success) // Handle the success response object
-    //   ).catch(
-    //     error => console.log(error) // Handle the error response object
-    //   );
-    // }
-    //   const data2 =  () => response2(file);
+
     await fetch(
       uploadUrl, {
       method: 'PUT',
@@ -72,13 +60,13 @@ class CreatePost extends Component {
     console.log(this.props.deleteOption);
     let postId = uuidv4();
     let userId = postData.userId;
-    
+    console.log(postData); 
     let url = await this.uploadImage(this.selectedImage, postId);
     console.log(url);
     if (!this.props.deleteOption) {
       try {
         let postData = {
-          userId: 'ss',
+          userId: userId,
           postId: postId,
           name: postBar.value,
           url: url
@@ -207,7 +195,8 @@ class CreatePost extends Component {
       userId: userId,
       postId: postId
     }
-    console.log("createPost: ", this.props.data)
+    console.log(this.props.data);
+    //console.log("createPost: ", this.props.data)
     const avatar = this.props.avatar;
     const deleteOption = this.props.deleteOption
 

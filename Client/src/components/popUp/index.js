@@ -4,19 +4,20 @@ import CreatePost from "../createPost"
 export default class PopUp extends Component {
   togglePop(data) {
    this.props.toggle(data);
+   console.log("cliecked close")
   };
   refresh= async ()=>{
     console.log("conveying through popup")
     await this.props.refreshPosts()
   }
 render() {
-    console.log("pop-up: ", this.props.data);
+    console.log("pop-up: ", this.props.data,this.props.dp);
   return (
    <div className="modal">
        <div> 
        <span className="close" onClick={() =>this.togglePop({userId:'',postId:'',caption:''})}>&times;    </span>
            <CreatePost 
-           avatar="https://homepages.cae.wisc.edu/~ece533/images/girl.png" 
+           avatar={this.props.dp}
            deleteOption={true} data={this.props.data}
            toggle={(data) => this.togglePop(data)}
            refreshPosts={async ()=> await this.refresh()}

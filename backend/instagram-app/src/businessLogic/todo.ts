@@ -10,8 +10,8 @@ import { TodoAccess } from '../dataLayer/todoAccess'
 const todoAccess = new TodoAccess()
 
 
-export async function getAllToDos(): Promise<TodoItem[]> {
-    return await todoAccess.getAllToDos();
+export async function getAllToDos(userId:string): Promise<TodoItem[]> {
+    return await todoAccess.getAllToDos(userId);
 
 }
 

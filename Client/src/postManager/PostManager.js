@@ -23,12 +23,21 @@ class PostManager extends Component {
   
   getPosts = async () => {
      try{
+      const token = this.props.token;
+      var bearer = 'Bearer ' + token;
+      console.log(bearer);
     const response = await fetch(
       'https://y12cb4g5ec.execute-api.us-east-1.amazonaws.com/dev/posts', {
-      method: 'GET'
+      method: 'GET',
+     
+      headers: {
+          'Authorization': bearer
+          
+      }
     }
     )
     const data = await response.json();
+    console.log(data);
     let items = data.items;
     
     this.setState({
@@ -67,34 +76,35 @@ class PostManager extends Component {
 
 
   render() {
-    
+    this.data.userId = this.props.user.sub;
+    let name = this.props.user.name;
+    let profilePicture = this.props.user.picture;
     return (
       <div>
         <div>{this.state.seen ? 
           <PopUp
             toggle={(data) => this.togglePopUp(data)} 
-            
+            dp={profilePicture}
             data={this.data} 
             refreshPosts={async () => await this.getPosts()}/> : null}
         </div>
         <CreatePost 
-          avatar="https://homepages.cae.wisc.edu/~ece533/images/girl.png" 
-          deleteOption={false} data={this.props.data}
+          avatar={profilePicture}
+          deleteOption={false} data={this.data}
           refreshPosts={async () => await this.getPosts()}>
           
         </CreatePost>
       {
         this.state.posts.length>0 ? this.state.posts.map((item) => {
-          console.log( item.attachmentUrl)
+          
           let imageUrl = ""
           if (item.attachmentUrl!=="null")
             imageUrl = item.attachmentUrl;
-          
-         console.log( imageUrl)
+
         return (
           
-          <Post userId={item.userId} postId = {item.postId} 
-            avatar="https://homepages.cae.wisc.edu/~ece533/images/girl.png" 
+          <Post userId={name} postId = {item.postId} 
+            avatar={profilePicture} 
             caption={item.name} image={imageUrl} toggle={(data) => this.togglePopUp(data)} 
             refreshPosts={async () => await this.getPosts()}>
 

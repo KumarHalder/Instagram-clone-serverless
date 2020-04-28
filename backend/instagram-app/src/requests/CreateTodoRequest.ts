@@ -3,6 +3,7 @@
  */
 export interface CreateTodoRequest {
     postId:string,
+    userId:string,
     name: string,
     url:string
     

@@ -26,7 +26,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
 //   const downloadUrl = urls[1];
   //console.log(uploadUrl,downloadUrl);
   const newTodo:TodoItem = {
-    userId: "ss",
+    userId: newTodoReq.userId,
     postId: newTodoReq.postId,
     name:newTodoReq.name,
     createdAt:currentTime.toString(),
