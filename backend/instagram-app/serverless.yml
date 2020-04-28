@@ -12,8 +12,8 @@ custom:
 # Add the serverless-webpack plugin
 plugins:
   - serverless-webpack
-  # - serverless-reqvalidator-plugin
-  # - serverless-aws-documentation
+  - serverless-reqvalidator-plugin
+  - serverless-aws-documentation
   - serverless-iam-roles-per-function
 
 provider:
@@ -23,9 +23,9 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-east-1'}
 
-  # tracing:
-  #   lambda: true
-  #   apiGateway: true
+  tracing:
+    lambda: true
+    apiGateway: true
   
   environment:
     TODO_TABLE: instagram-serverless-${self:provider.stage}
@@ -50,13 +50,13 @@ functions:
           - dynamodb:Query
           - dynamodb:Scan
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODO_TABLE}
-      #
-      # TraceSegments -- Tracing and telemetry:
-      # - Effect: "Allow"
-      #   Action:
-      #     - xray:PutTelemetryRecords
-      #     - xray:PutTraceSegments
-      #  Resource: "*"
+      
+      TraceSegments -- Tracing and telemetry:
+      - Effect: "Allow"
+        Action:
+          - xray:PutTelemetryRecords
+          - xray:PutTraceSegments
+       Resource: "*"
   CreatePost:
     handler: src/lambda/http/createPost.handler
     events:
@@ -64,12 +64,12 @@ functions:
           method: post
           path: posts
           cors: true
-          # reqValidatorName: RequestBodyValidator
-          # documentation:
-          #   summary: Create a new todo item
-          #   description: Create a new to do item with due date
-          #   requestModels:
-          #     'application/json': createTodoRequest
+          reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: Create a new todo item
+            description: Create a new to do item with due date
+            requestModels:
+              'application/json': createTodoRequest
     iamRoleStatementsInherit: true
     iamRoleStatements:
       - Effect: Allow

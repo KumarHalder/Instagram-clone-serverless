@@ -1,17 +1,17 @@
 //import { v4 as uuidv4 } from 'uuid'
 import { TodoItem } from '../models/TodoItem'
 //import {getUserId} from '../lambda/utils'
-import { TodoAccess } from '../dataLayer/todoAccess'
+import { PostAccess } from '../dataLayer/postAccess'
 //import { getUserId } from '../lambda/utils';
 
 //import { APIGatewayProxyEvent } from 'aws-lambda'
 //import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
 
-const todoAccess = new TodoAccess()
+const postAccess = new PostAccess()
 
 
 export async function getAllToDos(userId:string): Promise<TodoItem[]> {
-    return await todoAccess.getAllToDos(userId);
+    return await postAccess.getAllToDos(userId);
 
 }
 
@@ -28,7 +28,7 @@ export async function getAllToDos(userId:string): Promise<TodoItem[]> {
 //         createdAt: date.toISOString(),
 //         name: parseBody.name
 //     }
-//     return await todoAccess.createTodo(todoItemNew);
+//     return await postAccess.createTodo(todoItemNew);
 // }
 
 // export async function updateTodo(event: APIGatewayProxyEvent) {
@@ -36,6 +36,6 @@ export async function getAllToDos(userId:string): Promise<TodoItem[]> {
 //     const userId = "getUserId(event)";
 //     const updatedTodo: UpdateTodoRequest = JSON.parse(event.body);
 
-//     return await todoAccess.updateTodo(updatedTodo, userId, todoId);
+//     return await postAccess.updateTodo(updatedTodo, userId, todoId);
 // }
 

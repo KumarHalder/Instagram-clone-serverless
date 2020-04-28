@@ -5,11 +5,12 @@ import { TodoItem } from '../models/TodoItem'
 //import { getUserId } from '../lambda/utils';
 import { TodoUpdate } from '../models/TodoUpdate';
 //import { APIGatewayProxyEvent} from 'aws-lambda'
+import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
 
 //import * as AWSXRay from "aws-xray-sdk";
 const AWSXRay = require('aws-xray-sdk');
 const XAWS = AWSXRay.captureAWS(AWS);
-export class TodoAccess {
+export class PostAccess {
     constructor(
         private readonly docClient: DocumentClient = createDynamoDBClient(),
         private readonly todoTable = process.env.TODO_TABLE
@@ -44,7 +45,7 @@ export class TodoAccess {
         return todoItem
     }
 
-    async updateTodo(updatedTodo: TodoUpdate, userId: string, todoId: string): Promise<TodoUpdate> {
+    async updateTodo(updatedTodo:UpdateTodoRequest, userId: string, todoId: string): Promise<TodoUpdate> {
 
 
         var params = {
@@ -54,16 +55,15 @@ export class TodoAccess {
                 "todoId": todoId
 
             },
-            UpdateExpression: "set #name_todo = :n,#dueDate_todo = :dd,#done_todo = :dn",
+            UpdateExpression: "set #name_todo = :n",
             ExpressionAttributeValues: {
-                ":n": updatedTodo.name.toString(),
-                ":dd": updatedTodo.dueDate.toString(),
-                ":dn": "true" === updatedTodo.done.toString()
+                ":n": updatedTodo.name.toString()
+                
             },
             ExpressionAttributeNames: {
-                "#name_todo": "name",
-                "#dueDate_todo": "dueDate",
-                "#done_todo": "done"
+                "#name_todo": "name"
+               
+                
 
             },
             ReturnValues: "UPDATED_NEW"
@@ -84,8 +84,12 @@ export class TodoAccess {
                 console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
             }
         }).promise();
-
-        return updatedTodo
+        const item : TodoUpdate = {
+            name:updatedTodo.name,
+            postId:todoId,
+            userId:userId
+        }
+        return item
 
     }
 
