@@ -16,5 +16,15 @@ For front-end use, reactjs is implemened.
 
 # ScreenShots 
 
+Authorization
+
 ![Alt text](Screenshots/authorize.png?raw=true "Authorize page ")
+
+Ceate Post
+
+![Alt text](Screenshots/createPost.png?raw=true "Create Post  ")
+
+Sample
+
+![Alt text](Screenshots/twoCC.png?raw=true "Sample Post  ")
 
