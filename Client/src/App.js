@@ -2,25 +2,10 @@ import React from 'react';
 import './App.css';
 import NavBar from "./components/login/NavBar";
 
-import PostManager from './postManager/PostManager'
+import PostManager from './components/postManager/PostManager'
 import Header from './components/Header';
 import { useAuth0 } from "./react-auth0-spa";
 
-//import Post from './components/Post';
-//import PopUp from "./components/popUp"
-// class App extends Component {
-
-
-//   render() {
-//     return <div className="App">
-//       <Header />
-//       <section className="App-main">
-//           <PostManager/>
-//             {/* <Post nickname="o" avatar="https://homepages.cae.wisc.edu/~ece533/images/girl.png" caption="Moving the communit!" image='' toggle={(data) =>this.togglePop(data)} /> */}
-//       </section> 
-//     </div>;
-//   }
-// }
 
 const App = () => {
 
@@ -45,7 +30,6 @@ else {return <div className="App">
 </header>
 <section className="App-main">
   <PostManager token={idToken} user={user}/>
-  {/* <Post nickname="o" avatar="https://homepages.cae.wisc.edu/~ece533/images/girl.png" caption="Moving the communit!" image='' toggle={(data) =>this.togglePop(data)} /> */}
 </section>
 </div>;
 }
