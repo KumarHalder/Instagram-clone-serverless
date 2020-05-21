@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import NavBar from "./components/NavBar";
+import NavBar from "./components/login/NavBar";
 
 import PostManager from './postManager/PostManager'
 import Header from './components/Header';

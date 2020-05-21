@@ -14,6 +14,13 @@ For front-end use, reactjs is implemened.
 - After post creation, user can edit post by the option (...) button at the top-right corner of each post, or delete it 
 - Click on log out button when done. 
 
+# Sample Demo
+<br/>
+Video Demo <br/>
+<br/>
+
+https://www.youtube.com/watch?v=ASPHO3rEm30&feature=youtu.be
+
 # ScreenShots 
 
 Authorization
